@@ -1,0 +1,91 @@
+---------------
+S2
+---------------
+enable
+configure terminal
+hostname S2
+
+
+vlan 30
+name ISP1
+exit
+
+vlan 40
+name ISP2
+exit
+
+interface range fa0/1 - 10
+switchport mode access
+switchport access vlan 30
+exit
+
+interface range fa0/11 - 20
+switchport mode access
+switchport access vlan 40
+exit
+
+interface g0/1
+switchport mode trunk
+switchport trunk allowed vlan 30,40
+exit
+
+
+---------------
+R3
+---------------
+enable
+configure terminal
+hostname R3
+
+interface g0/0/0.30
+encapsulation dot1Q 30
+ip address 25.25.25.65 255.255.255.248
+ip helper-address 25.25.25.82
+no shutdown
+exit
+
+interface g0/0/0.40
+encapsulation dot1Q 40
+ip address 25.25.25.33 255.255.255.240
+ip helper-address 25.25.25.82
+no shutdown
+exit
+
+interface g0/0/0
+no shutdown
+exit
+
+interface g0/0/1
+ip address 25.25.25.78 255.255.255.252
+no shutdown
+exit
+
+interface se0/1/0
+ip address 25.25.25.81 255.255.255.252
+ip helper-address 25.25.25.82
+no shutdown
+exit
+
+ip domain-name redes.com
+crypto key generate rsa
+1024
+ip ssh version 2
+username R3 privilege 15 secret R3
+line vty 0 4
+transport input ssh
+login local
+exit
+
+
+---------------
+OSPF
+---------------
+R3
+enable
+configure terminal
+router ospf 3
+router-id 3.3.3.3
+network 25.25.25.76 0.0.0.3 area 0
+network 25.25.25.80 0.0.0.3 area 0
+network 25.25.25.64 0.0.0.7 area 0
+network 25.25.25.32 0.0.0.15 area 0

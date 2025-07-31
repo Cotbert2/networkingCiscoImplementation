@@ -1,0 +1,172 @@
+---------------
+S1
+---------------
+enable
+configure terminal
+hostname S1
+
+vlan 10
+name GERENCIA
+exit
+
+vlan 20
+name VENTAS
+exit
+
+interface range fa0/1 - 10
+switchport mode access
+switchport access vlan 10
+exit
+
+interface range fa0/11 - 20
+switchport mode access
+switchport access vlan 20
+exit
+
+interface g0/1
+switchport mode trunk
+switchport trunk allowed vlan 10,20
+exit
+
+
+---------------
+R1
+---------------
+enable
+configure terminal
+hostname R1
+
+interface g0/0/1.10
+encapsulation dot1Q 10
+ip address 172.16.101.1 255.255.255.192
+exit
+
+interface g0/0/1.20
+encapsulation dot1Q 20
+ip address 172.16.101.65 255.255.255.224 
+exit
+
+interface g0/0/1
+no shutdown
+exit
+
+
+interface g0/0/0
+ip address 25.25.25.73 255.255.255.252
+no shutdown
+exit
+
+
+
+
+ip domain-name redes.com
+crypto key generate rsa
+1024
+ip ssh version 2
+username R1 privilege 15 secret R1
+line vty 0 4
+transport input ssh
+login local
+exit
+
+
+
+
+
+ip dhcp exclude-address 172.16.100.1
+ip dhcp exclude-address 172.16.101.1
+ip dhcp exclude-address 172.16.101.65
+ip dhcp exclude-address 172.16.101.97
+ip dhcp exclude-address 172.16.101.70
+ip dhcp exclude-address 172.16.101.100
+
+
+ip dhcp pool GERENCIA
+network 172.16.101.0 255.255.255.192
+default-router 172.16.101.1
+dns-server 172.16.101.100
+exit
+
+ip dhcp pool VENTAS
+network 172.16.101.64 255.255.255.224
+default-router 172.16.101.65
+dns-server 172.16.101.100
+exit
+
+ip dhcp pool SUCURSAL
+network 172.16.100.0 255.255.255.0
+default-router 172.16.100.1
+dns-server 172.16.100.100
+exit
+
+
+
+---------------
+R2
+---------------
+enable
+configure terminal
+hostname R2
+
+interface g0/0/0
+ip address 25.25.25.74 255.255.255.252
+no shutdown
+exit
+
+interface g0/0/1
+ip address 25.25.25.77 255.255.255.252
+no shutdown
+exit
+
+
+ip domain-name redes.com
+crypto key generate rsa
+1024
+ip ssh version 2
+username R2 privilege 15 secret R2
+line vty 0 4
+transport input ssh
+login local
+exit
+
+
+
+---------------
+OSPF
+---------------
+R1
+enable
+configure terminal
+router ospf 1
+router-id 1.1.1.1
+network 25.25.25.72 0.0.0.3 area 0
+
+
+R2
+enable
+configure terminal
+router ospf 2
+router-id 2.2.2.2
+network 25.25.25.72 0.0.0.3 area 0
+network 25.25.25.76 0.0.0.3 area 0
+
+
+
+---------------
+VPN
+---------------
+R1
+interface tunnel 1
+ip addres 10.0.0.1 255.255.255.252
+tunnel source g0/0/0
+tunnel destination 25.25.25.90
+---------------
+EIGRP
+---------------
+R1
+enable
+configure terminal
+router eigrp 10
+network 10.0.0.0 0.0.0.3
+network 172.16.101.0 0.0.0.63
+network 172.16.101.64 0.0.0.31

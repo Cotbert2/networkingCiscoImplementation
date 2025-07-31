@@ -1,0 +1,144 @@
+---------------
+R5
+---------------
+enable
+configure terminal
+hostname R5
+
+interface g0/0/0
+ip address 25.25.25.89 255.255.255.252
+no shutdown
+exit
+
+interface se0/1/1
+ip address 25.25.25.86 255.255.255.252
+no shutdown
+exit
+
+
+ip domain-name redes.com
+crypto key generate rsa
+1024
+ip ssh version 2
+username R5 privilege 15 secret R5
+line vty 0 4
+transport input ssh
+login local
+exit
+
+
+
+
+---------------
+R6
+---------------
+enable
+configure terminal
+hostname R6
+
+interface g0/0/0
+ip address 25.25.25.90 255.255.255.252
+no shutdown
+exit
+
+interface g0/0/1.70
+encapsulation dot1Q 70
+ip address 172.16.100.1 255.255.255.192
+ip helper-address 10.0.0.1
+no shutdown
+exit
+
+interface g0/0/1.80
+encapsulation dot1Q 80
+ip address 172.16.101.97 255.255.255.192
+ip helper-address 10.0.0.1
+no shutdown
+exit
+
+interface g0/0/1
+no shutdown
+exit
+
+
+ip domain-name redes.com
+crypto key generate rsa
+1024
+ip ssh version 2
+username R6 privilege 15 secret R6
+line vty 0 4
+transport input ssh
+login local
+exit
+
+
+---------------
+S4
+---------------
+enable
+configure terminal
+hostname S4
+
+vlan 70
+name SUCURSAL
+exit
+
+vlan 80
+name DC
+exit
+
+interface range fa0/1 - 10
+switchport mode access
+switchport access vlan 70
+exit
+
+interface range fa0/11 - 20
+switchport mode access
+switchport access vlan 80
+exit
+
+interface g0/1
+switchport mode trunk
+switchport trunk allowed vlan 70,80
+exit
+
+
+---------------
+OSPF
+---------------
+
+R5
+enable
+configure terminal
+router ospf 5
+router-id 5.5.5.5
+network 25.25.25.84 0.0.0.3 area 0
+network 25.25.25.88 0.0.0.3 area 0
+
+R6
+enable
+configure terminal
+router ospf 6
+router-id 6.6.6.6
+network 25.25.25.88 0.0.0.3 area 0
+network 172.16.100.0 0.0.0.255 area 0
+network 172.16.101.96 0.0.0.15 area 0
+
+---------------
+VPN
+---------------
+R6
+interface tunnel 1
+ip address 10.0.0.2 255.255.255.252
+tunnel source g0/0/0
+tunnel destination 25.25.25.73
+
+---------------
+EIGRP
+---------------
+R2
+enable
+configure terminal
+router eigrp 10
+network 10.0.0.0 0.0.0.3
+network 172.16.100.0 0.0.0.255
+network 172.16.101.96 0.0.0.15
