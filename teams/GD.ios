@@ -55,6 +55,10 @@ ip helper-address 10.0.0.1
 no shutdown
 exit
 
+interface g0/0/1.666
+encapsulation dot1q 666 native
+exit
+
 interface g0/0/1
 no shutdown
 exit
@@ -99,6 +103,7 @@ exit
 interface g0/1
 switchport mode trunk
 switchport trunk allowed vlan 70,80
+switchport trunk native vlan 666
 exit
 
 
@@ -122,6 +127,7 @@ router-id 6.6.6.6
 network 25.25.25.88 0.0.0.3 area 0
 network 172.16.100.0 0.0.0.255 area 0
 network 172.16.101.96 0.0.0.15 area 0
+passive-interface g0/0/1
 
 ---------------
 VPN
@@ -135,7 +141,7 @@ tunnel destination 25.25.25.73
 ---------------
 EIGRP
 ---------------
-R2
+R6
 enable
 configure terminal
 router eigrp 10
