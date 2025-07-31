@@ -100,8 +100,8 @@ exit
 
 ip dhcp pool SUCURSAL
 network 172.16.100.0 255.255.255.0
-default-router 172.16.101.1
-dns-server 172.16.100.100
+default-router 172.16.100.1
+dns-server 172.16.101.100
 exit
 
 
