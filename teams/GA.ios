@@ -145,6 +145,7 @@ configure terminal
 router ospf 1
 router-id 1.1.1.1
 network 25.25.25.72 0.0.0.3 area 0
+passive-interface g0/0/1
 
 
 R2

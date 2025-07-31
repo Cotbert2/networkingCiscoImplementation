@@ -127,6 +127,7 @@ router-id 6.6.6.6
 network 25.25.25.88 0.0.0.3 area 0
 network 172.16.100.0 0.0.0.255 area 0
 network 172.16.101.96 0.0.0.15 area 0
+passive-interface g0/0/1
 
 ---------------
 VPN

@@ -125,3 +125,4 @@ network 25.25.25.80 0.0.0.3 area 0
 network 25.25.25.84 0.0.0.3 area 0
 network 25.25.25.0 0.0.0.31 area 0
 network 25.25.25.48 0.0.0.15 area 0
+passive-interface g0/0/1
