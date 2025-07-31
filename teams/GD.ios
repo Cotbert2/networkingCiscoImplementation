@@ -142,3 +142,27 @@ router eigrp 10
 network 10.0.0.0 0.0.0.3
 network 172.16.100.0 0.0.0.255
 network 172.16.101.96 0.0.0.15
+
+
+-----------
+GRE
+-----------
+R6
+enable
+configure terminal
+access-list 100 permit gre host 25.25.25.90 host 25.25.25.73
+crypto ipsec transform-set TRANS esp-aes esp-sha-hmac
+mode transport
+crypto map VPN 10 ipsec-isakmp 
+set peer 25.25.25.73
+set transform-set TRANS
+match address 100
+crypto isakmp policy 10
+encr aes
+hash sha
+authentication pre-share
+group 2
+lifetime 86400
+crypto isakmp key clave123 address 25.25.25.73
+interface g0/0/0
+ crypto map VPN
