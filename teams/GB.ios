@@ -27,6 +27,7 @@ exit
 interface g0/1
 switchport mode trunk
 switchport trunk allowed vlan 30,40
+switchport trunk native vlan 666
 exit
 
 
@@ -49,6 +50,10 @@ encapsulation dot1Q 40
 ip address 25.25.25.33 255.255.255.240
 ip helper-address 25.25.25.82
 no shutdown
+exit
+
+interface g0/0/0.666
+encapsulation dot1q 666 native
 exit
 
 interface g0/0/0
