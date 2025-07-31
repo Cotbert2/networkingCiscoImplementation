@@ -73,12 +73,12 @@ exit
 
 
 
-ip dhcp exclude-address 172.16.100.1
-ip dhcp exclude-address 172.16.101.1
-ip dhcp exclude-address 172.16.101.65
-ip dhcp exclude-address 172.16.101.97
-ip dhcp exclude-address 172.16.101.70
-ip dhcp exclude-address 172.16.101.100
+ip dhcp excluded-address 172.16.100.1
+ip dhcp excluded-address 172.16.101.1
+ip dhcp excluded-address 172.16.101.65
+ip dhcp excluded-address 172.16.101.97
+ip dhcp excluded-address 172.16.101.70
+ip dhcp excluded-address 172.16.101.100
 
 
 ip dhcp pool GERENCIA
@@ -95,7 +95,7 @@ exit
 
 ip dhcp pool SUCURSAL
 network 172.16.100.0 255.255.255.0
-default-router 172.16.100.1
+default-router 172.16.101.1
 dns-server 172.16.100.100
 exit
 

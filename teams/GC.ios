@@ -3,7 +3,7 @@ S3
 ---------------
 enable
 configure terminal
-hostname S1
+hostname S3
 
 
 vlan 50

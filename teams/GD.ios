@@ -135,7 +135,7 @@ tunnel destination 25.25.25.73
 ---------------
 EIGRP
 ---------------
-R2
+R6
 enable
 configure terminal
 router eigrp 10
